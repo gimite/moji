@@ -9,14 +9,11 @@
 
 日本語の文字種判定、文字種変換(半角→全角、ひらがな→カタカナなど)を行います。
 
-==ダウンロード / インストール:
+==インストール:
 
-((<URL:http://gimite.ddo.jp/pukiwiki/index.php?Ruby%BE%AE%CA%AA%BD%B8>))
-からダウンロードし、解凍してできた moji ディレクトリの中で以下のコマンドを実行してください。
+以下のコマンドを実行してください。
 
-  # ruby setup.rb
-
-または、 moji/lib の中の moji.rb と flag_set_maker.rb を lib/ruby/site_ruby/1.8 などにコピーしてください。
+  $ sudo gem install moji
 
 ==使い方:
 
@@ -269,6 +266,10 @@ Gimite 市川 (連絡先: ((<URL:http://gimite.ddo.jp/bbs/tnote.cgi>)) )
 ==ライセンス:
 
 Public Domainです。煮るなり焼くなりご自由に。
+
+==Github:
+
+((<URL:http://github.com/gimite/moji>))
 
 ==更新履歴:
 
