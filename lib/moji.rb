@@ -473,6 +473,8 @@ module Moji
             pos= Detail::ZEN_KATA_LISTS[i].index($&)
             break Detail::HAN_KATA_LIST[pos]+Detail::HAN_VSYMBOLS[i] if pos
           end
+
+          $&
         end
       end
       str= str.tr("ａ-ｚ", "a-z") if tp.include?(ZEN_LOWER)
