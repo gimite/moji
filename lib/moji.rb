@@ -467,7 +467,7 @@ module Moji
   def zen_to_han(str, tp= ALL)
     Detail.convert_encoding(str) do |str|
       if tp.include?(ZEN_KATA)
-        reg= Regexp.new("["+Detail::ZEN_KATA_LISTS.to_s()+"]")
+        reg= Regexp.new("[%s]" % Detail::ZEN_KATA_LISTS.flatten().join(""))
         str= str.gsub(reg) do
           for i in 0...3
             pos= Detail::ZEN_KATA_LISTS[i].index($&)
