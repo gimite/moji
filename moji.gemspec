@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name = "moji"
-  s.version = "1.5"
+  s.version = "1.6"
   s.authors = ["Hiroshi Ichikawa"]
-  s.date = "2010-09-20"
+  s.date = "2013-01-20"
   s.description = "Character type classification/conversion for Japanese"
   s.email = "gimite+moji@gmail.com"
   s.files = ["README.txt", "lib/moji.rb", "lib/flag_set_maker.rb"]
