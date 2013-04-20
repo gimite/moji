@@ -311,6 +311,7 @@ end
 
 nkf_kcode= RUBY_VERSION >= "1.9.0" ? nil : {"SJIS" => "s", "EUC" => "e"}[$KCODE]
 
+script_line_no= __LINE__ + 2
 script= <<'EOS'
 
 
@@ -591,7 +592,7 @@ EOS
 
 script= NKF.nkf("-#{nkf_kcode}Wx", script) if nkf_kcode
   #UTF-8の場合、nkfしてはいけない（～が〜になるので）。
-eval(script, TOPLEVEL_BINDING)
+eval(script, TOPLEVEL_BINDING, __FILE__, script_line_no)
 
 if __FILE__==$0
   Moji.test()
