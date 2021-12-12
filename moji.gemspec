@@ -6,7 +6,6 @@ Gem::Specification.new do |s|
   s.description = "Character type classification/conversion for Japanese"
   s.email = "gimite+moji@gmail.com"
   s.files = ["README.txt", "lib/moji.rb", "lib/flag_set_maker.rb"]
-  s.has_rdoc = true
   s.homepage = "http://gimite.net/gimite/rubymess/moji.html"
   s.rdoc_options = ["--quiet", "--title", "moji Reference", "--main", "lib/moji.rb"]
   s.require_paths = ["lib"]
