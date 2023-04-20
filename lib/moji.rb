@@ -1,5 +1,5 @@
-require "enumerator"
-require "flag_set_maker"
+require 'moji/version'
+require 'moji/flag_set_maker'
 
 module Moji
   extend(FlagSetMaker)
