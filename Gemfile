@@ -1,5 +1,10 @@
 source 'https://rubygems.org'
 
-gem 'rspec'
-
 gemspec
+
+group :development, :test do
+  gem 'rspec'
+  gem 'rubocop', '~> 1.49.0'
+  gem 'rubocop-performance', '~> 1.16.0'
+  gem 'rubocop-rspec', '~> 2.19.0'
+end
