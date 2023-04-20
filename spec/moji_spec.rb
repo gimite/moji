@@ -96,5 +96,50 @@ describe Moji do
     it 'maps the types' do
       expect(str.each_char.map { |chr| described_class.type(chr) }).to eq exp
     end
+
+    context 'when Arabic' do
+      let(:str) { 'مرحبًا' }
+      let(:exp) { [nil] * 6 }
+
+      it 'maps the types' do
+        expect(str.each_char.map { |chr| described_class.type(chr) }).to eq exp
+      end
+    end
+
+    context 'when Thai' do
+      let(:str) { 'สวัสดี' }
+      let(:exp) { [nil] * 6 }
+
+      it 'maps the types' do
+        expect(str.each_char.map { |chr| described_class.type(chr) }).to eq exp
+      end
+    end
+
+    context 'when Greek' do
+      let(:str) { 'Γειάσου' }
+      let(:exp) { [nil] * 7 }
+
+      it 'maps the types' do
+        expect(str.each_char.map { |chr| described_class.type(chr) }).to eq exp
+      end
+    end
+
+    context 'when Cyrillic' do
+      let(:str) { 'Привет' }
+      let(:exp) { [nil] * 6 }
+
+      it 'maps the types' do
+        expect(str.each_char.map { |chr| described_class.type(chr) }).to eq exp
+      end
+    end
+
+    context 'when Vietnamese' do
+      let(:str) { 'Ônài' }
+      let(:exp) { [nil, Moji::HAN_LOWER, Moji::HAN_LOWER, nil, Moji::HAN_LOWER] }
+
+      it 'maps the types' do
+        expect(str.each_char.map { |chr| described_class.type(chr) }).to eq exp
+      end
+    end
   end
 end
