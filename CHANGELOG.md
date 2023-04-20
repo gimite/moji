@@ -3,6 +3,8 @@
 ### 2023/04/21 - v2.0.0
 
 - Remove GREEK, CYRILLIC, and LINE constants.
+- Fix a bug where Moji.type? was returning true for unknown types.
+- Move all classes under Moji namespace.
 - Drop support for Ruby 2.5 and earlier.
 - Add Rubocop.
 - Add Github Actions.

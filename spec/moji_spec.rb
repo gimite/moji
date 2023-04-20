@@ -97,12 +97,51 @@ describe Moji do
       expect(str.each_char.map { |chr| described_class.type(chr) }).to eq exp
     end
 
+    context 'when hankaku katakana' do
+      let(:str) { 'ﾗ' }
+      let(:exp) { [Moji::HAN_KATA] }
+
+      it 'maps the types' do
+        expect(str.each_char.map { |chr| described_class.type(chr) }).to eq exp
+      end
+
+      it 'considers type to be HAN_KATA' do
+        expect(Moji.type('ﾗ')).to eq Moji::HAN_KATA
+        expect(Moji.type?('ﾗ', Moji::ZEN)).to be false
+        expect(Moji.type?('ﾗ', Moji::HAN)).to be true
+        expect(Moji.type?('ﾗ', Moji::HAN_KATA)).to be true
+        expect(Moji.type?('ﾗ', Moji::KANJI)).to be false
+      end
+    end
+
+    context 'when kanji' do
+      let(:str) { '本' }
+      let(:exp) { [Moji::KANJI] }
+
+      it 'maps the types' do
+        expect(str.each_char.map { |chr| described_class.type(chr) }).to eq exp
+      end
+
+      it 'considers type to be HAN_KATA' do
+        expect(Moji.type('本')).to eq Moji::KANJI
+        expect(Moji.type?('本', Moji::ZEN)).to be true
+        expect(Moji.type?('本', Moji::ZEN_KATA)).to be false
+        expect(Moji.type?('本', Moji::HAN)).to be false
+        expect(Moji.type?('本', Moji::KANJI)).to be true
+      end
+    end
+
     context 'when Arabic' do
       let(:str) { 'مرحبًا' }
       let(:exp) { [nil] * 6 }
 
       it 'maps the types' do
         expect(str.each_char.map { |chr| described_class.type(chr) }).to eq exp
+      end
+
+      it 'considers type nil' do
+        expect(Moji.type('ر')).to be_nil
+        expect(Moji.type?('ر', Moji::ZEN)).to be false
       end
     end
 
@@ -113,6 +152,11 @@ describe Moji do
       it 'maps the types' do
         expect(str.each_char.map { |chr| described_class.type(chr) }).to eq exp
       end
+
+      it 'considers type nil' do
+        expect(Moji.type('ส')).to be_nil
+        expect(Moji.type?('ส', Moji::ZEN)).to be false
+      end
     end
 
     context 'when Greek' do
@@ -122,6 +166,11 @@ describe Moji do
       it 'maps the types' do
         expect(str.each_char.map { |chr| described_class.type(chr) }).to eq exp
       end
+
+      it 'considers type nil' do
+        expect(Moji.type('ε')).to be_nil
+        expect(Moji.type?('ε', Moji::ZEN)).to be false
+      end
     end
 
     context 'when Cyrillic' do
@@ -130,6 +179,11 @@ describe Moji do
 
       it 'maps the types' do
         expect(str.each_char.map { |chr| described_class.type(chr) }).to eq exp
+      end
+
+      it 'considers type nil' do
+        expect(Moji.type('и')).to be_nil
+        expect(Moji.type?('и', Moji::ZEN)).to be false
       end
     end
 

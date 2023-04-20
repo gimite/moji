@@ -1,40 +1,18 @@
 # frozen_string_literal: true
 
 require 'moji/version'
-require 'moji/flag_set_maker'
+require 'moji/detail'
+require 'moji/flag_set'
+require 'moji/flags'
 
 module Moji
-  extend(FlagSetMaker)
-
-  module Detail
-    HAN_ASYMBOL_LIST = ' !"#$%&\'()*+,-./:;<=>?@[\]^_`{|}~'
-    ZEN_ASYMBOL_LIST = '　！”＃＄％＆’（）＊＋，－．／：；＜＝＞？＠［￥］＾＿‘｛｜｝￣'
-    HAN_JSYMBOL1_LIST = '｡｢｣､ｰﾞﾟ･'
-    ZEN_JSYMBOL1_LIST = '。「」、ー゛゜・'
-    ZEN_JSYMBOL_LIST = '、。・゛゜´｀¨ヽヾゝゞ〃仝々〆〇ー―‐＼～〜∥…‥“〔〕〈〉《》「」『』【】' \
-                       '±×÷≠≦≧∞∴♂♀°′″℃￠￡§☆★○●◎◇◇◆□■△▲▽▼※〒→←↑↓〓'
-    HAN_KATA_LIST = 'ﾊﾋﾌﾍﾎｳｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄｱｲｴｵﾅﾆﾇﾈﾉﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝｧｨｩｪｫｬｭｮｯ'.chars
-    HAN_VSYMBOLS = ['', 'ﾞ', 'ﾟ'].freeze
-    ZEN_KATA_LISTS = [
-      'ハヒフヘホウカキクケコサシスセソタチツテトアイエオ' \
-      'ナニヌネノマミムメモヤユヨラリルレロワヲンァィゥェォャュョッ',
-      'バビブベボヴガギグゲゴザジズゼゾダヂヅデド',
-      'パピプペポ'
-    ].map(&:chars)
-
-    def self.convert_encoding(string)
-      orig_encoding = string.encoding
-      return yield(string) if orig_encoding == Encoding::UTF_8
-
-      # 無駄なコピーを避けるためにencodeを呼ばない。
-      result = yield(string.encode(Encoding::UTF_8))
-      result.is_a?(String) ? result.encode(orig_encoding) : result
-    end
-  end
-
   def self.uni_range(*args)
     str = args.each_slice(2).map { |f, e| format('\u%04x-\u%04x', f, e) }.join
     /[#{str}]/
+  end
+
+  def self.make_flag_set(*args)
+    FlagSet.new(self, *args)
   end
 
   make_flag_set(%i[
@@ -222,6 +200,6 @@ module Moji
   # han_control, han_asymbol, …などのモジュール関数を定義。
   constants.each do |cons|
     val = const_get(cons)
-    define_regexp_method(cons.downcase, val) if val.is_a?(FlagSetMaker::Flags)
+    define_regexp_method(cons.downcase, val) if val.is_a?(::Moji::Flags)
   end
 end

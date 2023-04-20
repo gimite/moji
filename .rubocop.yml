@@ -7,3 +7,6 @@ require:
 AllCops:
   TargetRubyVersion: 2.6
   NewCops: enable
+
+RSpec/DescribedClass:
+  Enabled: false
