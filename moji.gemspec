@@ -1,4 +1,6 @@
-$:.push File.expand_path('lib', __dir__)
+# frozen_string_literal: true
+
+$LOAD_PATH.push File.expand_path('lib', __dir__)
 require 'moji/version'
 
 Gem::Specification.new do |s|
@@ -8,12 +10,13 @@ Gem::Specification.new do |s|
   s.authors     = ['Hiroshi Ichikawa']
   s.email       = ['gimite+moji@gmail.com']
   s.homepage    = 'https://github.com/gimite/moji'
-  s.summary     = %q{Character type classification and conversion for Japanese language}
-  s.description = %q{Character type classification and conversion for Japanese language}
+  s.summary     = 'Character type classification and conversion for Japanese language'
+  s.description = 'Character type classification and conversion for Japanese language'
   s.license     = 'MIT'
 
   s.files         = Dir['lib/**/*'] + %w[README.md LICENSE]
   s.require_paths = ['lib']
 
   s.required_ruby_version = '>= 2.6'
+  s.metadata['rubygems_mfa_required'] = 'true'
 end

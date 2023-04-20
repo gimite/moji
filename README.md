@@ -238,7 +238,7 @@ Ruby 1.9.2にて動作確認しました。
 
 ## 作者
 
-Gimite 市川 (連絡先: ((<URL:http://gimite.ddo.jp/bbs/tnote.cgi>)) )
+Gimite 市川
 
 ## ライセンス
 
@@ -246,27 +246,4 @@ Public Domainです。煮るなり焼くなりご自由に。
 
 ## Github
 
-((<URL:http://github.com/gimite/moji>))
-
-## 更新履歴
-
-2010/9/19 Ver.1.5
-*Ruby 1.9に対応。
-
-2008/8/30 Ver.1.4
-*Moji.type("\n")がnilを返すバグを修正。(thanks to 橋爪さん)
-
-2006/7/23 Ver.1.3
-*半角中黒(･)の字種判別、全角中黒との相互変換ができていなかったのを修正。(thanks to xyzzyさん)
-
-2006/10/5 Ver.1.2
-*EUC 以外の文字コードにも対応し、ライブラリ名を Moji に変更。
-*han_to_zen, zen_to_han の対象文字種のデフォルトを全て( (({ALL})) )に。
-*normalize_zen_han 追加。
-
-2005/1/3 Ver.1.1
-*(({$KCODE})) が指定されていないとEUCUtil.typeが正常動作しない問題を修正。
-*定数に (({ASYMBOL})) と (({JSYMBOL})) を追加。
-
-2004/11/16 Ver.1.0
-*EUCUtil 公開。
+((<URL:https://github.com/gimite/moji>))
