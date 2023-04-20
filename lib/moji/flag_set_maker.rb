@@ -87,9 +87,11 @@ module FlagSetMaker
       @value != 0
     end
 
-    private
+    protected
 
     attr_reader(:flag_set)
+
+    private
 
     def new_flag(value)
       Flags.new(value, @flag_set)

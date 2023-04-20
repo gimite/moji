@@ -3,25 +3,25 @@
 require_relative 'spec_helper'
 
 describe Moji do
-  let(:str) { 'ドﾗえもん(Doraemon)は、日本で1番有名な漫画だ。' }
+  let(:str) { 'ドﾗえもん(DorＡｅmon)は、日本で1番有名な漫画だ。' }
 
   describe '::zen_to_han' do
     let(:conv) { described_class.zen_to_han(str) }
-    let(:exp) { 'ﾄﾞﾗえもん(Doraemon)は､日本で1番有名な漫画だ｡' }
+    let(:exp) { 'ﾄﾞﾗえもん(DorAemon)は､日本で1番有名な漫画だ｡' }
 
     it { expect(conv).to eq(exp) }
   end
 
   describe '::han_to_zen' do
     let(:conv) { described_class.han_to_zen(str) }
-    let(:exp)  { 'ドラえもん（Ｄｏｒａｅｍｏｎ）は、日本で１番有名な漫画だ。' }
+    let(:exp)  { 'ドラえもん（ＤｏｒＡｅｍｏｎ）は、日本で１番有名な漫画だ。' }
 
     it { expect(conv).to eq(exp) }
   end
 
   describe '::normalize_zen_han' do
     let(:conv) { described_class.normalize_zen_han(str) }
-    let(:exp) { 'ドラえもん(Doraemon)は、日本で1番有名な漫画だ。' }
+    let(:exp) { 'ドラえもん(DorAemon)は、日本で1番有名な漫画だ。' }
 
     it { expect(conv).to eq(exp) }
 
@@ -34,14 +34,28 @@ describe Moji do
 
   describe '::kata_to_hira' do
     let(:conv) { described_class.kata_to_hira(str) }
-    let(:exp) { 'どﾗえもん(Doraemon)は、日本で1番有名な漫画だ。' }
+    let(:exp) { 'どﾗえもん(DorＡｅmon)は、日本で1番有名な漫画だ。' }
 
     it { expect(conv).to eq(exp) }
   end
 
   describe '::hira_to_kata' do
     let(:conv) { described_class.hira_to_kata(str) }
-    let(:exp) { 'ドﾗエモン(Doraemon)ハ、日本デ1番有名ナ漫画ダ。' }
+    let(:exp) { 'ドﾗエモン(DorＡｅmon)ハ、日本デ1番有名ナ漫画ダ。' }
+
+    it { expect(conv).to eq(exp) }
+  end
+
+  describe '::upcase' do
+    let(:conv) { described_class.upcase(str) }
+    let(:exp) { 'ドﾗえもん(DORＡＥMON)は、日本で1番有名な漫画だ。' }
+
+    it { expect(conv).to eq(exp) }
+  end
+
+  describe '::downcase' do
+    let(:conv) { described_class.downcase(str) }
+    let(:exp) { 'ドﾗえもん(dorａｅmon)は、日本で1番有名な漫画だ。' }
 
     it { expect(conv).to eq(exp) }
   end
@@ -57,8 +71,8 @@ describe Moji do
        Moji::HAN_UPPER,
        Moji::HAN_LOWER,
        Moji::HAN_LOWER,
-       Moji::HAN_LOWER,
-       Moji::HAN_LOWER,
+       Moji::ZEN_UPPER,
+       Moji::ZEN_LOWER,
        Moji::HAN_LOWER,
        Moji::HAN_LOWER,
        Moji::HAN_LOWER,
