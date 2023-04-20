@@ -5,6 +5,8 @@
 - Remove GREEK, CYRILLIC, and LINE constants.
 - Drop support for Ruby 2.5 and earlier.
 - Add Rubocop.
+- Add Github Actions.
+- Add RSpec tests.
 - Code cleanup.
 
 ### 2010/9/19 - v1.5.0
