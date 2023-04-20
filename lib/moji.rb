@@ -22,13 +22,13 @@ module Moji
       'パピプペポ'
     ].map(&:chars)
 
-    def self.convert_encoding(str)
-      orig_enc = str.encoding
-      return yield(str) if orig_enc == Encoding::UTF_8
+    def self.convert_encoding(string)
+      orig_encoding = string.encoding
+      return yield(string) if orig_encoding == Encoding::UTF_8
 
       # 無駄なコピーを避けるためにencodeを呼ばない。
-      result = yield(str.encode(Encoding::UTF_8))
-      result.is_a?(String) ? result.encode(orig_enc) : result
+      result = yield(string.encode(Encoding::UTF_8))
+      result.is_a?(String) ? result.encode(orig_encoding) : result
     end
   end
 
@@ -85,8 +85,8 @@ module Moji
     ZEN_KANJI => uni_range(0x3400, 0x4dbf, 0x4e00, 0x9fff, 0xf900, 0xfaff) || /[亜-瑤]/
   }.freeze
 
-  def type(ch)
-    Detail.convert_encoding(ch) do |ch|
+  def type(char)
+    Detail.convert_encoding(char) do |ch|
       ch = ch.slice(/\A./m)
       result = nil
       CHAR_REGEXPS.each do |tp, reg|
@@ -99,16 +99,16 @@ module Moji
     end
   end
 
-  def type?(ch, tp)
-    Detail.convert_encoding(ch) do |ch|
-      tp.include?(type(ch))
+  def type?(char, types)
+    Detail.convert_encoding(char) do |ch|
+      types.include?(type(ch))
     end
   end
 
-  def regexp(tp, encoding = nil)
+  def regexp(types, encoding = nil)
     regs = []
     CHAR_REGEXPS.each do |tp2, reg|
-      regs.push(reg) if tp.include?(tp2)
+      regs.push(reg) if types.include?(tp2)
     end
     reg = regs.size == 1 ? regs[0] : Regexp.new(regs.join('|'))
 
@@ -116,14 +116,13 @@ module Moji
 
     return Regexp.new(reg.to_s.encode(encoding)) if encoding && encoding != Encoding::UTF_8
 
-
     reg
   end
 
-  def zen_to_han(str, tp = ALL)
-    Detail.convert_encoding(str) do |str|
-      if tp.include?(ZEN_KATA)
-        reg = Regexp.new('[%s]' % Detail::ZEN_KATA_LISTS.flatten.join)
+  def zen_to_han(string, types = ALL)
+    Detail.convert_encoding(string) do |str|
+      if types.include?(ZEN_KATA)
+        reg = Regexp.new(format('[%s]', Detail::ZEN_KATA_LISTS.flatten.join))
         str = str.gsub(reg) do
           3.times do |i|
             pos = Detail::ZEN_KATA_LISTS[i].index(::Regexp.last_match(0))
@@ -131,16 +130,16 @@ module Moji
           end
         end
       end
-      str = str.tr('ａ-ｚ', 'a-z') if tp.include?(ZEN_LOWER)
-      str = str.tr('Ａ-Ｚ', 'A-Z') if tp.include?(ZEN_UPPER)
-      str = str.tr('０-９', '0-9') if tp.include?(ZEN_NUMBER)
-      if tp.include?(ZEN_ASYMBOL)
+      str = str.tr('ａ-ｚ', 'a-z') if types.include?(ZEN_LOWER)
+      str = str.tr('Ａ-Ｚ', 'A-Z') if types.include?(ZEN_UPPER)
+      str = str.tr('０-９', '0-9') if types.include?(ZEN_NUMBER)
+      if types.include?(ZEN_ASYMBOL)
         str = str.tr(Detail::ZEN_ASYMBOL_LIST,
                      Detail::HAN_ASYMBOL_LIST.gsub(/[-\^\\]/) do
                        "\\#{::Regexp.last_match(0)}"
                      end)
       end
-      if tp.include?(ZEN_JSYMBOL)
+      if types.include?(ZEN_JSYMBOL)
         str = str.tr(Detail::ZEN_JSYMBOL1_LIST,
                      Detail::HAN_JSYMBOL1_LIST)
       end
@@ -148,10 +147,10 @@ module Moji
     end
   end
 
-  def han_to_zen(str, tp = ALL)
-    Detail.convert_encoding(str) do |str|
+  def han_to_zen(string, types = ALL)
+    Detail.convert_encoding(string) do |str|
       # [半]濁音記号がJSYMBOLに含まれるので、KATAの変換をJSYMBOLより前にやる必要あり。
-      if tp.include?(HAN_KATA)
+      if types.include?(HAN_KATA)
         str = str.gsub(/(#{han_kata})([ﾞﾟ]?)/) do
           i = { '' => 0, 'ﾞ' => 1, 'ﾟ' => 2 }[::Regexp.last_match(2)]
           pos = Detail::HAN_KATA_LIST.index(::Regexp.last_match(1))
@@ -159,14 +158,14 @@ module Moji
           !s || s == '' ? Detail::ZEN_KATA_LISTS[0][pos] + ::Regexp.last_match(2) : s
         end
       end
-      str = str.tr('a-z', 'ａ-ｚ') if tp.include?(HAN_LOWER)
-      str = str.tr('A-Z', 'Ａ-Ｚ') if tp.include?(HAN_UPPER)
-      str = str.tr('0-9', '０-９') if tp.include?(HAN_NUMBER)
-      if tp.include?(HAN_ASYMBOL)
+      str = str.tr('a-z', 'ａ-ｚ') if types.include?(HAN_LOWER)
+      str = str.tr('A-Z', 'Ａ-Ｚ') if types.include?(HAN_UPPER)
+      str = str.tr('0-9', '０-９') if types.include?(HAN_NUMBER)
+      if types.include?(HAN_ASYMBOL)
         str = str.tr(Detail::HAN_ASYMBOL_LIST.gsub(/[-\^\\]/) { "\\#{::Regexp.last_match(0)}" },
                      Detail::ZEN_ASYMBOL_LIST)
       end
-      if tp.include?(HAN_JSYMBOL)
+      if types.include?(HAN_JSYMBOL)
         str = str.tr(Detail::HAN_JSYMBOL1_LIST,
                      Detail::ZEN_JSYMBOL1_LIST)
       end
@@ -174,36 +173,36 @@ module Moji
     end
   end
 
-  def normalize_zen_han(str)
-    Detail.convert_encoding(str) do |str|
+  def normalize_zen_han(string)
+    Detail.convert_encoding(string) do |str|
       zen_to_han(han_to_zen(str, HAN_JSYMBOL | HAN_KATA), ZEN_ALNUM | ZEN_ASYMBOL)
     end
   end
 
-  def upcase(str, tp = LOWER)
-    Detail.convert_encoding(str) do |str|
-      str = str.tr('a-z', 'A-Z') if tp.include?(HAN_LOWER)
-      str = str.tr('ａ-ｚ', 'Ａ-Ｚ') if tp.include?(ZEN_LOWER)
+  def upcase(string, types = LOWER)
+    Detail.convert_encoding(string) do |str|
+      str = str.tr('a-z', 'A-Z') if types.include?(HAN_LOWER)
+      str = str.tr('ａ-ｚ', 'Ａ-Ｚ') if types.include?(ZEN_LOWER)
       str
     end
   end
 
-  def downcase(str, tp = UPPER)
-    Detail.convert_encoding(str) do |str|
-      str = str.tr('A-Z', 'a-z') if tp.include?(HAN_UPPER)
-      str = str.tr('Ａ-Ｚ', 'ａ-ｚ') if tp.include?(ZEN_UPPER)
+  def downcase(string, types = UPPER)
+    Detail.convert_encoding(string) do |str|
+      str = str.tr('A-Z', 'a-z') if types.include?(HAN_UPPER)
+      str = str.tr('Ａ-Ｚ', 'ａ-ｚ') if types.include?(ZEN_UPPER)
       str
     end
   end
 
-  def kata_to_hira(str)
-    Detail.convert_encoding(str) do |str|
+  def kata_to_hira(string)
+    Detail.convert_encoding(string) do |str|
       str.tr('ァ-ン', 'ぁ-ん')
     end
   end
 
-  def hira_to_kata(str)
-    Detail.convert_encoding(str) do |str|
+  def hira_to_kata(string)
+    Detail.convert_encoding(string) do |str|
       str.tr('ぁ-ん', 'ァ-ン')
     end
   end
@@ -213,9 +212,9 @@ module Moji
     :kata_to_hira, :hira_to_kata
   )
 
-  def self.define_regexp_method(name, tp)
+  def self.define_regexp_method(name, types)
     define_method(name) do |*args|
-      regexp(tp, *args)
+      regexp(types, *args)
     end
     module_function(name)
   end

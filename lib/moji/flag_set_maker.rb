@@ -18,9 +18,9 @@ module FlagSetMaker
       mod.const_set(@zero_name, Flags.new(0, self)) if @zero_name
     end
 
-    def to_s(v)
+    def to_s(value)
       names = []
-      @flag_names.each_with_index { |name, i| names.push(name) if v[i] == 1 }
+      @flag_names.each_with_index { |name, i| names.push(name) if value[i] == 1 }
       if names.empty?
         (@zero_name.to_s || '0')
       elsif names.size == 1
@@ -30,21 +30,21 @@ module FlagSetMaker
       end
     end
 
-    def inspect(v = nil)
-      v ? format('%p::%s', @module, to_s(v)) : super()
+    def inspect(value = nil)
+      value ? format('%p::%s', @module, to_s(value)) : super()
     end
 
-    def validate(v)
-      v & ((1 << @flag_names.size) - 1)
+    def validate(value)
+      value & ((1 << @flag_names.size) - 1)
     end
   end
 
   class Flags
     extend(Forwardable)
 
-    def initialize(v, fs)
-      @value = fs.validate(v)
-      @flag_set = fs
+    def initialize(value, flag_set)
+      @value = flag_set.validate(value)
+      @flag_set = flag_set
     end
 
     def to_i
@@ -91,8 +91,8 @@ module FlagSetMaker
 
     attr_reader(:flag_set)
 
-    def new_flag(v)
-      Flags.new(v, @flag_set)
+    def new_flag(value)
+      Flags.new(value, @flag_set)
     end
   end
 end
