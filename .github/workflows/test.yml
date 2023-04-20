@@ -1,0 +1,51 @@
+---
+name: Tests
+
+'on':
+  - push
+  - pull_request
+
+jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Install ruby-3.2
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ruby-3.2
+          bundler-cache: true
+      - name: Run RuboCop
+        run: bundle exec rubocop --parallel
+
+  test:
+    name: "Test ${{matrix.ruby}}"
+    env:
+      CI: true
+    runs-on: ubuntu-22.04
+    continue-on-error: "${{matrix.experimental || false}}"
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby:
+          - ruby-2.6
+          - ruby-2.7
+          - ruby-3.0
+          - ruby-3.1
+          - ruby-3.2
+          - jruby-9.3
+          - jruby-9.4
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: "Install ${{ matrix.ruby }}"
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "${{ matrix.ruby }}"
+          bundler-cache: true
+      - name: Run tests
+        run: |
+          bundle exec rspec
